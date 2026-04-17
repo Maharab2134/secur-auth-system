@@ -26,13 +26,15 @@ connectDB();
 app.use(helmet()); // Sets various HTTP headers for security
 
 // CORS Configuration
+const normalizeOrigin = (origin) => origin.replace(/\/$/, "");
+
 const allowedOrigins = (
   process.env.FRONTEND_URLS ||
   process.env.FRONTEND_URL ||
   "http://localhost:5173"
 )
   .split(",")
-  .map((origin) => origin.trim())
+  .map((origin) => normalizeOrigin(origin.trim()))
   .filter(Boolean);
 
 app.use(
@@ -41,11 +43,12 @@ app.use(
       // Allow non-browser requests (e.g., curl, server-to-server) with no Origin header.
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      if (allowedOrigins.includes(normalizeOrigin(origin))) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      // Do not throw from CORS middleware; throwing here causes 500 on preflight.
+      return callback(null, false);
     },
     credentials: true, // Allow cookies
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
