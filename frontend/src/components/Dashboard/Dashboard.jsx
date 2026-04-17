@@ -792,7 +792,9 @@ const Dashboard = () => {
                         <div>
                           <span className="text-gray-600">Location:</span>
                           <span className="ml-2 font-medium text-gray-900">
-                            {item.location?.city}, {item.location?.country}
+                            {item.location?.city && item.location?.city !== "Unknown"
+                              ? `${item.location.city}, ${item.location?.country || "Unknown"}`
+                              : item.location?.country || "Unknown"}
                           </span>
                         </div>
                         <div>
