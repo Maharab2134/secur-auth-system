@@ -1,0 +1,79 @@
+# =========================
+# ENV FILES (IMPORTANT)
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# NODE MODULES
+# =========================
+node_modules/
+
+# =========================
+# LOG FILES
+# =========================
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# BUILD FILES
+# =========================
+dist/
+build/
+.next/
+out/
+
+# =========================
+# CACHE
+# =========================
+.cache/
+.parcel-cache/
+.npm/
+
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# EDITOR FILES
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# TEST COVERAGE
+# =========================
+coverage/
+
+# =========================
+# TEMP FILES
+# =========================
+tmp/
+temp/
+
+# =========================
+# DATABASE FILES (if local)
+# =========================
+*.sqlite
+*.db
+
+# =========================
+# UPLOADS (optional)
+# =========================
+uploads/
+public/uploads/
+
+# =========================
+# SECRET KEYS / CONFIG
+# =========================
+config/secrets.js
