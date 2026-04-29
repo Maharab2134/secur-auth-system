@@ -3,17 +3,36 @@
  * Navigation bar with user menu
  */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { authAPI } from "../../services/api";
 import toast from "react-hot-toast";
 import Cookies from "js-cookie";
+import BrandMark from "../UI/BrandMark";
+import Button from "../UI/Button";
 
 const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [theme, setTheme] = useState(() => {
+    if (typeof window === "undefined") return "dark";
+    return window.localStorage.getItem("authnova-theme") || "dark";
+  });
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const nextTheme = theme === "light" ? "theme-light" : "theme-dark";
+
+    html.classList.remove("theme-light", "theme-dark");
+    html.classList.add(nextTheme);
+    window.localStorage.setItem("authnova-theme", theme);
+  }, [theme]);
+
+  const handleThemeToggle = () => {
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  };
 
   const handleLogout = async () => {
     try {
@@ -30,39 +49,55 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="relative z-50 shadow-lg nav-shell anim-page">
+    <nav className="theme-nav sticky top-0 z-50 border-b border-white/10 bg-black/35 backdrop-blur-xl animate-appear">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <div className="w-10 h-10 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-lg flex items-center justify-center anim-float">
-                <span className="text-white text-xl font-bold">🔐</span>
-              </div>
-              <span className="ml-3 text-xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-                SecureAuth
-              </span>
+            <Link to="/">
+              <BrandMark compact={isAuthenticated} />
             </Link>
           </div>
 
-          {/* Navigation Items */}
           <div className="flex items-center space-x-4">
+            <button
+              type="button"
+              onClick={handleThemeToggle}
+              className="theme-toggle rounded-lg border border-white/20 bg-white/5 px-3 py-2 text-xs font-semibold tracking-wide text-slate-200 transition-colors hover:bg-white/10"
+              title="Toggle dark/light mode"
+              aria-label="Toggle dark and light mode"
+            >
+              {theme === "dark" ? "White Mode" : "Dark Mode"}
+            </button>
+
             {isAuthenticated ? (
               <>
                 <Link
+                  to="/about"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-cyan-200"
+                >
+                  About Me
+                </Link>
+
+                <Link
                   to="/dashboard"
-                  className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors nav-link-pro"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-cyan-200"
                 >
                   Dashboard
                 </Link>
 
-                {/* User Dropdown */}
+                <Link
+                  to="/security-center"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-cyan-200"
+                >
+                  Security
+                </Link>
+
                 <div className="relative">
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}
-                    className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 focus:outline-none"
+                    className="flex items-center space-x-2 text-slate-200 hover:text-cyan-200 focus:outline-none"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary flex items-center justify-center">
                       <span className="text-white text-sm font-medium">
                         {user?.name?.charAt(0).toUpperCase()}
                       </span>
@@ -85,29 +120,28 @@ const Navbar = () => {
                     </svg>
                   </button>
 
-                  {/* Dropdown Menu */}
                   {showDropdown && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-1 z-50 animate-fade-in">
-                      <div className="px-4 py-2 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">
+                    <div className="theme-dropdown absolute right-0 mt-2 w-52 rounded-xl border border-white/10 bg-slate-950/95 py-2 shadow-xl z-50 animate-appear">
+                      <div className="px-4 py-2 border-b border-white/10">
+                        <p className="text-sm font-medium text-slate-100">
                           {user?.name}
                         </p>
-                        <p className="text-xs text-gray-500 truncate">
+                        <p className="text-xs text-slate-400 truncate">
                           {user?.email}
                         </p>
                       </div>
 
                       <Link
-                        to="/dashboard"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+                        to="/security-center"
+                        className="block px-4 py-2 text-sm text-slate-200 hover:bg-white/10 transition-colors"
                         onClick={() => setShowDropdown(false)}
                       >
-                        Profile
+                        Security Center
                       </Link>
 
                       <button
                         onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                        className="block w-full text-left px-4 py-2 text-sm text-rose-300 hover:bg-rose-400/10 transition-colors"
                       >
                         Sign out
                       </button>
@@ -118,16 +152,20 @@ const Navbar = () => {
             ) : (
               <>
                 <Link
+                  to="/#about-me"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-cyan-200"
+                >
+                  About Me
+                </Link>
+
+                <Link
                   to="/login"
-                  className="text-gray-700 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors nav-link-pro"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-cyan-200"
                 >
                   Login
                 </Link>
-                <Link
-                  to="/register"
-                  className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:shadow-lg transition-all"
-                >
-                  Sign Up
+                <Link to="/register">
+                  <Button size="md">Start Free</Button>
                 </Link>
               </>
             )}
@@ -135,7 +173,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Backdrop for dropdown */}
       {showDropdown && (
         <div
           className="fixed inset-0 z-40"

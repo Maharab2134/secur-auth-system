@@ -7,6 +7,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { authAPI } from "../../services/api";
 import toast from "react-hot-toast";
+import AuthShell from "../UI/AuthShell";
+import Input from "../UI/Input";
+import Button from "../UI/Button";
+import Card from "../UI/Card";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -45,163 +49,69 @@ const ForgotPassword = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 anim-page">
-        <div className="max-w-md w-full">
-          <div className="text-center mb-8 animate-fade-in">
-            <div className="flex justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-white text-3xl">✓</span>
-              </div>
-            </div>
-            <h2 className="text-4xl font-bold text-gray-900">
-              Check Your Email
-            </h2>
-            <p className="mt-4 text-gray-600">
-              We've sent a password reset link to
-            </p>
-            <p className="font-medium text-gray-900 mt-1">{email}</p>
+      <AuthShell
+        title="Reset link sent"
+        subtitle="If your account exists, a password reset email is on the way."
+        sideTitle="Recovery flow remains secure"
+        sideCopy="Reset tokens still expire quickly and follow your existing secure backend implementation."
+      >
+        <Card className="space-y-4 text-center animate-rise">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/20 text-2xl text-emerald-300">
+            ✓
           </div>
-
-          <div className="card animate-slide-up anim-hover-lift">
-            <div className="text-center space-y-4">
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-blue-800">
-                  <strong>📧 Check your inbox</strong>
-                  <br />
-                  The reset link will expire in 15 minutes.
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">
-                  Didn't receive the email?
-                </p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="text-sm font-medium text-primary-600 hover:text-primary-500"
-                >
-                  Try another email address
-                </button>
-              </div>
-
-              <div className="pt-4 border-t">
-                <Link
-                  to="/login"
-                  className="text-sm font-medium text-gray-600 hover:text-gray-900"
-                >
-                  ← Back to Login
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+          <p className="text-slate-300">
+            A reset link has been sent to{" "}
+            <span className="font-semibold text-white">{email}</span>
+          </p>
+          <p className="rounded-xl border border-cyan-300/20 bg-cyan-900/20 px-3 py-2 text-sm text-cyan-100">
+            The reset link will expire in 15 minutes.
+          </p>
+          <button onClick={() => setSubmitted(false)} className="nova-link">
+            Try another email address
+          </button>
+          <Link
+            to="/login"
+            className="block text-sm text-slate-400 hover:text-slate-200"
+          >
+            Back to Login
+          </Link>
+        </Card>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 anim-page">
-      <div className="max-w-md w-full">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-white text-3xl">🔑</span>
-            </div>
-          </div>
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">
-            Forgot Password?
-          </h2>
-          <p className="mt-2 text-gray-600">
-            No worries, we'll send you reset instructions
-          </p>
-        </div>
+    <AuthShell
+      title="Forgot your password"
+      subtitle="Enter your email and we will send a time-limited recovery link."
+      sideTitle="Account recovery that keeps risk low"
+      sideCopy="Token expiration and backend validation remain unchanged from your existing secure implementation."
+    >
+      <form onSubmit={handleSubmit} className="space-y-5 animate-rise">
+        <Input
+          id="email"
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          hint="Use the address associated with your account"
+          autoFocus
+        />
 
-        {/* Form */}
-        <div className="card animate-slide-up anim-hover-lift">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="label">
-                Email Address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="input"
-                placeholder="john@example.com"
-                autoFocus
-              />
-              <p className="mt-2 text-xs text-gray-500">
-                Enter the email address associated with your account
-              </p>
-            </div>
+        <Button type="submit" className="w-full" loading={loading}>
+          Send Reset Link
+        </Button>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn btn-primary w-full"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Sending...
-                </span>
-              ) : (
-                "Send Reset Link"
-              )}
-            </button>
-          </form>
-
-          {/* Back to Login */}
-          <div className="mt-6 text-center">
-            <Link
-              to="/login"
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 flex items-center justify-center"
-            >
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Back to Login
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
+        <p className="text-center text-sm text-slate-300">
+          <Link to="/login" className="nova-link">
+            Back to login
+          </Link>
+        </p>
+      </form>
+    </AuthShell>
   );
 };
 

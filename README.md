@@ -1,76 +1,65 @@
-# 🔐 Secure Authentication System
+# AuthNova
 
-A production-level, full-stack secure authentication system with advanced security features including JWT authentication, two-factor authentication (2FA), account lockout mechanisms, and comprehensive security monitoring.
+AuthNova is a full-stack authentication platform built with React, Node.js, Express, and MongoDB. It preserves production-grade security flows while introducing a completely redesigned interface and updated branding.
 
-## 🎯 Project Overview
+## Project Identity
 
-This project demonstrates enterprise-grade authentication and security practices suitable for real-world applications. Built for university demonstration and production deployment.
+- Name: AuthNova
+- Brand Line: Trust Refined
+- Logo Concept (text-based):
+  - Icon: Rounded square badge with gradient glow and AN monogram
+  - Wordmark: AuthNova in a geometric modern heading font
+  - Tone: Futuristic security dashboard with dark glass surfaces and cyan/emerald accents
 
-### **Tech Stack**
+## Tech Stack
 
-**Frontend:**
-- React.js 18
-- Tailwind CSS
-- React Router DOM
-- Axios
-- React Hot Toast
+- Frontend: React + Tailwind CSS + React Router + Axios + React Hot Toast
+- Backend: Node.js + Express + MongoDB (Mongoose)
 
-**Backend:**
-- Node.js
-- Express.js
-- MongoDB with Mongoose
-- JWT (Access + Refresh Tokens)
-- Bcrypt for password hashing
-- Nodemailer for emails
-- Speakeasy for 2FA
+## Security Features (unchanged logic)
 
-## ✨ Key Features
+- JWT access and refresh token flow
+- Password hashing with bcrypt
+- Two-factor authentication (OTP/authenticator)
+- Account lockout after failed attempts
+- Password reset with token expiration
+- Login history with IP/device/location tracking
+- Suspicious login alert emails
+- Rate limiting, Helmet hardening, CSRF protection
 
-### 🔒 Authentication Features
-- ✅ User Registration with email verification
-- ✅ Secure Login with JWT tokens
-- ✅ Access & Refresh token mechanism
-- ✅ Two-Factor Authentication (2FA)
-  - Email OTP
-  - Google Authenticator support
-- ✅ Password reset via email
-- ✅ Remember me functionality
+## Architecture
 
-### 🛡️ Security Features
-- ✅ Password hashing with bcrypt (12 rounds)
-- ✅ Strong password validation
-- ✅ Account lockout after failed attempts (5 attempts, 15 min lock)
-- ✅ Rate limiting on all endpoints
-- ✅ XSS protection with Helmet
-- ✅ Input validation and sanitization
-- ✅ Secure HTTP headers
-- ✅ CORS protection
-- ✅ Login history tracking
-- ✅ New device/location detection
-- ✅ Suspicious login email alerts
+- Backend follows MVC structure
+- Existing auth flow and API behavior preserved
+- Frontend restructured visually with reusable UI components:
+  - Button
+  - Input
+  - Card
+  - Auth shell layouts
 
-### 📊 Additional Features
-- ✅ User profile management
-- ✅ Login history with details (IP, device, location)
-- ✅ Password change functionality
-- ✅ Email notifications
-- ✅ Beautiful, responsive UI
-- ✅ Protected routes
+## Folder Overview
 
----
+- backend/: Express server, controllers, models, middleware, routes, utilities
+- frontend/: React app, auth pages, dashboard, shared UI components, context and API layer
 
-## 🚀 Installation & Setup
+## Run Locally
 
-### Prerequisites
-
-Ensure you have the following installed:
-- Node.js (v16 or higher)
-- MongoDB (v5 or higher)
-- npm or yarn
-- Git
-
-### Step 1: Clone the Repository
+### Backend
 
 ```bash
-git clone <your-repo-url>
-cd secure-auth-system
+cd backend
+npm install
+npm run dev
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Notes
+
+This redesign intentionally changes branding, typography, spacing, component style, and page composition to make the product identity distinct while preserving all existing security and authentication behavior.

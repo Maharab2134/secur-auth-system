@@ -13,8 +13,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="spinner"></div>
+      <div className="min-h-screen flex items-center justify-center bg-midnight">
+        <div className="h-11 w-11 rounded-full border-4 border-cyan-100/15 border-t-cyan-300 animate-spin" />
       </div>
     );
   }
