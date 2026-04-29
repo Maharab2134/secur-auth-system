@@ -4,8 +4,8 @@
  * Used for security monitoring and alerts
  */
 
-const UAParser = require('ua-parser-js');
-const geoip = require('geoip-lite');
+const UAParser = require("ua-parser-js");
+const geoip = require("geoip-lite");
 
 const PRIVATE_IP_PATTERNS = [
   /^10\./,
@@ -19,20 +19,24 @@ const PRIVATE_IP_PATTERNS = [
   /^fe80:/i,
 ];
 
-const normalizeIP = (rawIP = '') => {
-  if (!rawIP) return '';
+const normalizeIP = (rawIP = "") => {
+  if (!rawIP) return "";
 
   let ip = rawIP.trim();
 
   // Common IPv4-mapped IPv6 format: ::ffff:1.2.3.4
-  if (ip.startsWith('::ffff:')) {
+  if (ip.startsWith("::ffff:")) {
     ip = ip.slice(7);
   }
 
   // Remove brackets and port if present, e.g. [::1]:1234 or 1.2.3.4:5678
-  ip = ip.replace(/^\[|\]$/g, '');
-  if (ip.includes(':') && ip.includes('.') && ip.lastIndexOf(':') > ip.lastIndexOf('.')) {
-    ip = ip.slice(0, ip.lastIndexOf(':'));
+  ip = ip.replace(/^\[|\]$/g, "");
+  if (
+    ip.includes(":") &&
+    ip.includes(".") &&
+    ip.lastIndexOf(":") > ip.lastIndexOf(".")
+  ) {
+    ip = ip.slice(0, ip.lastIndexOf(":"));
   }
 
   return ip;
@@ -49,12 +53,13 @@ const isPrivateIP = (ipAddress) => {
 const parseUserAgent = (userAgentString) => {
   const parser = new UAParser(userAgentString);
   const result = parser.getResult();
-  
+
   return {
-    browser: `${result.browser.name || 'Unknown'} ${result.browser.version || ''}`.trim(),
-    os: `${result.os.name || 'Unknown'} ${result.os.version || ''}`.trim(),
-    platform: result.device.type || 'desktop',
-    type: result.device.type || 'desktop'
+    browser:
+      `${result.browser.name || "Unknown"} ${result.browser.version || ""}`.trim(),
+    os: `${result.os.name || "Unknown"} ${result.os.version || ""}`.trim(),
+    platform: result.device.type || "desktop",
+    type: result.device.type || "desktop",
   };
 };
 
@@ -65,31 +70,35 @@ const getLocationFromIP = (ipAddress) => {
   const normalizedIP = normalizeIP(ipAddress);
 
   // Handle localhost
-  if (!normalizedIP || normalizedIP === 'localhost' || isPrivateIP(normalizedIP)) {
+  if (
+    !normalizedIP ||
+    normalizedIP === "localhost" ||
+    isPrivateIP(normalizedIP)
+  ) {
     return {
-      country: 'Private Network',
-      region: 'Private Network',
-      city: 'Unknown',
-      timezone: 'Unknown'
+      country: "Private Network",
+      region: "Private Network",
+      city: "Unknown",
+      timezone: "Unknown",
     };
   }
-  
+
   const geo = geoip.lookup(normalizedIP);
-  
+
   if (geo) {
     return {
-      country: geo.country || 'Unknown',
-      region: geo.region || 'Unknown',
-      city: geo.city || 'Unknown',
-      timezone: geo.timezone || 'Unknown'
+      country: geo.country || "Unknown",
+      region: geo.region || "Unknown",
+      city: geo.city || "Unknown",
+      timezone: geo.timezone || "Unknown",
     };
   }
-  
+
   return {
-    country: 'Unknown',
-    region: 'Unknown',
-    city: 'Unknown',
-    timezone: 'Unknown'
+    country: "Unknown",
+    region: "Unknown",
+    city: "Unknown",
+    timezone: "Unknown",
   };
 };
 
@@ -99,10 +108,10 @@ const getLocationFromIP = (ipAddress) => {
  */
 const getClientIP = (req) => {
   const candidates = [
-    req.headers['cf-connecting-ip'],
-    req.headers['x-client-ip'],
-    req.headers['x-real-ip'],
-    req.headers['x-forwarded-for']?.split(',')[0],
+    req.headers["cf-connecting-ip"],
+    req.headers["x-client-ip"],
+    req.headers["x-real-ip"],
+    req.headers["x-forwarded-for"]?.split(",")[0],
     req.connection?.remoteAddress,
     req.socket?.remoteAddress,
     req.ip,
@@ -113,16 +122,16 @@ const getClientIP = (req) => {
     if (ip) return ip;
   }
 
-  return 'unknown';
+  return "unknown";
 };
 
 /**
  * Generate device fingerprint
  */
 const generateDeviceFingerprint = (ipAddress, userAgent) => {
-  const crypto = require('crypto');
+  const crypto = require("crypto");
   const fingerprint = `${ipAddress}-${userAgent}`;
-  return crypto.createHash('md5').update(fingerprint).digest('hex');
+  return crypto.createHash("md5").update(fingerprint).digest("hex");
 };
 
 /**
@@ -139,11 +148,13 @@ const isNewDevice = (user, currentFingerprint) => {
  */
 const isNewLocation = (user, currentLocation) => {
   if (!user.lastLoginIP) return true;
-  
+
   const lastLocation = getLocationFromIP(user.lastLoginIP);
-  
-  return lastLocation.country !== currentLocation.country ||
-         lastLocation.city !== currentLocation.city;
+
+  return (
+    lastLocation.country !== currentLocation.country ||
+    lastLocation.city !== currentLocation.city
+  );
 };
 
 module.exports = {
@@ -152,5 +163,5 @@ module.exports = {
   getClientIP,
   generateDeviceFingerprint,
   isNewDevice,
-  isNewLocation
+  isNewLocation,
 };

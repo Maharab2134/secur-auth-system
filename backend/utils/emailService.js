@@ -29,41 +29,63 @@ const sendVerificationEmail = async (email, name, token) => {
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
   const mailOptions = {
-    from: `"Secure Auth System" <${process.env.EMAIL_FROM}>`,
+    from: `"AuthNova - Trust Refined" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "Verify Your Email Address",
+    subject: "Verify Your Email - AuthNova",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
+          <meta charset="UTF-8">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); }
+            .header { background: linear-gradient(135deg, #22d3ee 0%, #10b981 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { font-size: 28px; margin-bottom: 5px; font-weight: 600; }
+            .brand-text { font-size: 13px; opacity: 0.9; }
+            .content { padding: 40px 30px; }
+            .greeting { font-size: 18px; font-weight: 500; margin-bottom: 20px; color: #0f172a; }
+            .message { color: #475569; margin-bottom: 30px; font-size: 15px; }
+            .button-container { text-align: center; margin: 35px 0; }
+            .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #22d3ee 0%, #10b981 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 15px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(34, 211, 238, 0.3); }
+            .button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(34, 211, 238, 0.4); }
+            .divider { border-top: 1px solid #e2e8f0; margin: 25px 0; }
+            .link-text { color: #475569; font-size: 13px; margin: 15px 0; }
+            .link-url { color: #22d3ee; word-break: break-all; font-family: monospace; font-size: 12px; }
+            .info-box { background: #f0f9ff; border-left: 4px solid #22d3ee; padding: 15px; border-radius: 6px; margin: 20px 0; }
+            .info-box strong { color: #0369a1; }
+            .footer { background: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
+            .footer-brand { color: #22d3ee; font-weight: 500; }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
-              <h1>🔐 Verify Your Email</h1>
-            </div>
-            <div class="content">
-              <h2>Hello ${name}!</h2>
-              <p>Thank you for registering with our Secure Auth System.</p>
-              <p>Please click the button below to verify your email address:</p>
-              <center>
-                <a href="${verificationUrl}" class="button">Verify Email Address</a>
-              </center>
-              <p>Or copy and paste this link into your browser:</p>
-              <p style="word-break: break-all; color: #667eea;">${verificationUrl}</p>
-              <p><strong>This link will expire in 24 hours.</strong></p>
-              <p>If you didn't create an account, please ignore this email.</p>
-            </div>
-            <div class="footer">
-              <p>© 2024 Secure Auth System. All rights reserved.</p>
+            <div class="wrapper">
+              <div class="header">
+                <h1>🔐</h1>
+                <h1>Verify Your Email</h1>
+                <p class="brand-text">AuthNova - Trust Refined</p>
+              </div>
+              <div class="content">
+                <p class="greeting">Hello ${name}! 👋</p>
+                <p class="message">Thank you for joining AuthNova. We're excited to have you on board!</p>
+                <p class="message">To complete your registration, please verify your email address by clicking the button below:</p>
+                <div class="button-container">
+                  <a href="${verificationUrl}" class="button">Verify Email Address</a>
+                </div>
+                <p class="message">If the button above doesn't work, copy and paste this link into your browser:</p>
+                <p class="link-text"><span class="link-url">${verificationUrl}</span></p>
+                <div class="info-box">
+                  <strong>⏱️ Link Expires:</strong> This verification link will expire in 24 hours. If you need a new one, simply request a new verification email.
+                </div>
+                <p class="message">If you didn't create this account, you can safely ignore this email or let us know.</p>
+              </div>
+              <div class="footer">
+                <p>© 2024 <span class="footer-brand">AuthNova</span>. Security-first authentication platform.</p>
+                <p style="margin-top: 10px; color: #94a3b8;">This is an automated message, please don't reply to this email.</p>
+              </div>
             </div>
           </div>
         </body>
@@ -89,48 +111,70 @@ const sendPasswordResetEmail = async (email, name, token) => {
   const expiryMinutes = process.env.PASSWORD_RESET_EXPIRY || 15;
 
   const mailOptions = {
-    from: `"Secure Auth System" <${process.env.EMAIL_FROM}>`,
+    from: `"AuthNova - Trust Refined" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "Password Reset Request",
+    subject: "Reset Your Password - AuthNova",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
+          <meta charset="UTF-8">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #f5576c; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .warning { background: #fef3cd; border-left: 4px solid #f5576c; padding: 15px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); }
+            .header { background: linear-gradient(135deg, #f97316 0%, #ef4444 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { font-size: 28px; margin-bottom: 5px; font-weight: 600; }
+            .brand-text { font-size: 13px; opacity: 0.9; }
+            .content { padding: 40px 30px; }
+            .greeting { font-size: 18px; font-weight: 500; margin-bottom: 20px; color: #0f172a; }
+            .message { color: #475569; margin-bottom: 20px; font-size: 15px; }
+            .button-container { text-align: center; margin: 35px 0; }
+            .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #f97316 0%, #ef4444 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 15px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
+            .button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
+            .divider { border-top: 1px solid #e2e8f0; margin: 25px 0; }
+            .link-text { color: #475569; font-size: 13px; margin: 15px 0; }
+            .link-url { color: #f97316; word-break: break-all; font-family: monospace; font-size: 12px; }
+            .warning-box { background: #fef2f2; border-left: 4px solid #f97316; padding: 15px; border-radius: 6px; margin: 20px 0; }
+            .warning-box strong { color: #991b1b; display: block; margin-bottom: 10px; }
+            .warning-box ul { margin-left: 20px; color: #7f1d1d; font-size: 14px; }
+            .warning-box li { margin: 8px 0; }
+            .footer { background: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
+            .footer-brand { color: #f97316; font-weight: 500; }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
-              <h1>🔑 Password Reset Request</h1>
-            </div>
-            <div class="content">
-              <h2>Hello ${name}!</h2>
-              <p>We received a request to reset your password.</p>
-              <p>Click the button below to create a new password:</p>
-              <center>
-                <a href="${resetUrl}" class="button">Reset Password</a>
-              </center>
-              <p>Or copy and paste this link into your browser:</p>
-              <p style="word-break: break-all; color: #f5576c;">${resetUrl}</p>
-              <div class="warning">
-                <strong>⚠️ Important:</strong>
-                <ul>
-                  <li>This link will expire in ${expiryMinutes} minutes</li>
-                  <li>If you didn't request this reset, please ignore this email</li>
-                  <li>Your password won't change until you create a new one</li>
-                </ul>
+            <div class="wrapper">
+              <div class="header">
+                <h1>🔑</h1>
+                <h1>Password Reset</h1>
+                <p class="brand-text">AuthNova - Trust Refined</p>
               </div>
-            </div>
-            <div class="footer">
-              <p>© 2024 Secure Auth System. All rights reserved.</p>
+              <div class="content">
+                <p class="greeting">Hello ${name}! 🛡️</p>
+                <p class="message">We received a request to reset your password. If this was you, click the button below to create a new password:</p>
+                <div class="button-container">
+                  <a href="${resetUrl}" class="button">Reset My Password</a>
+                </div>
+                <p class="message">If the button above doesn't work, copy and paste this link into your browser:</p>
+                <p class="link-text"><span class="link-url">${resetUrl}</span></p>
+                <div class="warning-box">
+                  <strong>⚠️ Important Security Information:</strong>
+                  <ul>
+                    <li>This reset link will expire in <strong>${expiryMinutes} minutes</strong></li>
+                    <li>If you didn't request this reset, your account is still secure</li>
+                    <li>Your password will only change if you complete the reset process</li>
+                    <li>Never share this link with anyone else</li>
+                  </ul>
+                </div>
+                <p class="message">If you have any questions or need assistance, contact our support team.</p>
+              </div>
+              <div class="footer">
+                <p>© 2024 <span class="footer-brand">AuthNova</span>. Security-first authentication platform.</p>
+                <p style="margin-top: 10px; color: #94a3b8;">This is an automated message, please don't reply to this email.</p>
+              </div>
             </div>
           </div>
         </body>
@@ -154,39 +198,67 @@ const send2FAEmail = async (email, name, otp) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from: `"Secure Auth System" <${process.env.EMAIL_FROM}>`,
+    from: `"AuthNova - Trust Refined" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "Your Two-Factor Authentication Code",
+    subject: "Your Two-Factor Authentication Code - AuthNova",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
+          <meta charset="UTF-8">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .otp-box { background: white; border: 2px dashed #667eea; padding: 20px; text-align: center; margin: 20px 0; border-radius: 10px; }
-            .otp-code { font-size: 32px; font-weight: bold; color: #667eea; letter-spacing: 8px; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); }
+            .header { background: linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { font-size: 28px; margin-bottom: 5px; font-weight: 600; }
+            .brand-text { font-size: 13px; opacity: 0.9; }
+            .content { padding: 40px 30px; }
+            .greeting { font-size: 18px; font-weight: 500; margin-bottom: 20px; color: #0f172a; }
+            .message { color: #475569; margin-bottom: 20px; font-size: 15px; }
+            .otp-container { text-align: center; margin: 35px 0; }
+            .otp-box { background: linear-gradient(135deg, #f0f9ff 0%, #f0fdfa 100%); border: 2px dashed #22d3ee; padding: 30px; border-radius: 10px; display: inline-block; }
+            .otp-label { font-size: 13px; color: #0369a1; font-weight: 500; margin-bottom: 15px; display: block; }
+            .otp-code { font-size: 42px; font-weight: 700; color: #0369a1; letter-spacing: 6px; font-family: 'Courier New', monospace; }
+            .timer { color: #64748b; font-size: 13px; margin-top: 15px; }
+            .security-box { background: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 6px; margin: 20px 0; }
+            .security-box strong { color: #166534; }
+            .security-box p { color: #15803d; font-size: 14px; margin: 8px 0; }
+            .footer { background: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
+            .footer-brand { color: #22d3ee; font-weight: 500; }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
-              <h1>🔐 Two-Factor Authentication</h1>
-            </div>
-            <div class="content">
-              <h2>Hello ${name}!</h2>
-              <p>Your verification code is:</p>
-              <div class="otp-box">
-                <div class="otp-code">${otp}</div>
+            <div class="wrapper">
+              <div class="header">
+                <h1>🔐</h1>
+                <h1>2FA Code</h1>
+                <p class="brand-text">AuthNova - Trust Refined</p>
               </div>
-              <p><strong>This code will expire in 5 minutes.</strong></p>
-              <p>If you didn't attempt to log in, please secure your account immediately.</p>
-            </div>
-            <div class="footer">
-              <p>© 2024 Secure Auth System. All rights reserved.</p>
+              <div class="content">
+                <p class="greeting">Hello ${name}! 🔑</p>
+                <p class="message">You requested a login. Here's your two-factor authentication code:</p>
+                <div class="otp-container">
+                  <div class="otp-box">
+                    <span class="otp-label">Your Code:</span>
+                    <div class="otp-code">${otp}</div>
+                    <div class="timer">⏱️ Expires in 5 minutes</div>
+                  </div>
+                </div>
+                <p class="message">Enter this code in the login window to proceed. This code is valid for 5 minutes only.</p>
+                <div class="security-box">
+                  <strong>🛡️ Security Notice:</strong>
+                  <p>If you didn't request this code or attempt to log in, your account may be at risk.</p>
+                  <p style="margin-top: 12px;"><strong>Take action immediately:</strong> Change your password in your account settings.</p>
+                </div>
+                <p class="message"><strong>Remember:</strong> AuthNova will never ask you to share this code with anyone. Never reply with your code.</p>
+              </div>
+              <div class="footer">
+                <p>© 2024 <span class="footer-brand">AuthNova</span>. Security-first authentication platform.</p>
+                <p style="margin-top: 10px; color: #94a3b8;">This is an automated message, please don't reply to this email.</p>
+              </div>
             </div>
           </div>
         </body>
@@ -209,64 +281,110 @@ const send2FAEmail = async (email, name, otp) => {
 const sendSuspiciousLoginAlert = async (email, name, loginDetails) => {
   const transporter = createTransporter();
   const { ipAddress, device, location, timestamp } = loginDetails;
+  const formattedTime = new Date(timestamp).toLocaleString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+  });
 
   const mailOptions = {
-    from: `"Secure Auth System" <${process.env.EMAIL_FROM}>`,
+    from: `"AuthNova - Trust Refined" <${process.env.EMAIL_FROM}>`,
     to: email,
-    subject: "🚨 Security Alert: New Login Detected",
+    subject: "🚨 Security Alert: New Login Detected - AuthNova",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
+          <meta charset="UTF-8">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #1e293b; background: #f8fafc; }
             .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .alert-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; }
-            .details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
-            .detail-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-            .button { display: inline-block; padding: 12px 30px; background: #dc3545; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            .wrapper { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); }
+            .header { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 40px 30px; text-align: center; }
+            .header h1 { font-size: 28px; margin-bottom: 5px; font-weight: 600; }
+            .brand-text { font-size: 13px; opacity: 0.9; }
+            .alert-banner { background: #fef2f2; border-left: 5px solid #f97316; padding: 15px 20px; margin: 0 -30px 30px -30px; }
+            .alert-text { color: #991b1b; font-weight: 600; font-size: 15px; }
+            .content { padding: 0 30px 30px 30px; }
+            .greeting { font-size: 16px; font-weight: 500; margin-bottom: 20px; color: #0f172a; }
+            .message { color: #475569; margin-bottom: 15px; font-size: 15px; }
+            .details-box { background: #f1f5f9; border-radius: 8px; padding: 20px; margin: 20px 0; }
+            .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #cbd5e1; }
+            .detail-row:last-child { border-bottom: none; }
+            .detail-label { font-weight: 500; color: #0f172a; font-size: 14px; }
+            .detail-value { color: #475569; text-align: right; font-size: 14px; word-break: break-word; max-width: 60%; }
+            .action-box { background: #fef2f2; border: 2px dashed #f97316; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .action-title { color: #991b1b; font-weight: 600; margin-bottom: 12px; font-size: 15px; }
+            .button-container { text-align: center; margin: 25px 0; }
+            .button { display: inline-block; padding: 12px 28px; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3); }
+            .button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4); }
+            .safe-message { color: #166534; background: #f0fdf4; border-left: 4px solid #10b981; padding: 12px 15px; border-radius: 6px; margin: 15px 0; font-size: 14px; }
+            .footer { background: #f8fafc; padding: 25px 30px; text-align: center; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; }
+            .footer-brand { color: #f97316; font-weight: 500; }
           </style>
         </head>
         <body>
           <div class="container">
-            <div class="header">
-              <h1>🚨 Security Alert</h1>
-            </div>
-            <div class="content">
-              <h2>Hello ${name}!</h2>
-              <div class="alert-box">
-                <strong>⚠️ We detected a new login to your account</strong>
+            <div class="wrapper">
+              <div class="header">
+                <h1>🚨</h1>
+                <h1>Security Alert</h1>
+                <p class="brand-text">AuthNova - Trust Refined</p>
               </div>
-              <p>A login was just detected from a new device or location:</p>
-              <div class="details">
-                <div class="detail-row">
-                  <strong>IP Address:</strong>
-                  <span>${ipAddress}</span>
-                </div>
-                <div class="detail-row">
-                  <strong>Device:</strong>
-                  <span>${device.browser} on ${device.os}</span>
-                </div>
-                <div class="detail-row">
-                  <strong>Location:</strong>
-                  <span>${location.city}, ${location.country}</span>
-                </div>
-                <div class="detail-row">
-                  <strong>Time:</strong>
-                  <span>${new Date(timestamp).toLocaleString()}</span>
-                </div>
+              <div class="alert-banner">
+                <p class="alert-text">⚠️ We detected a new login to your account</p>
               </div>
-              <p><strong>If this was you, you can safely ignore this email.</strong></p>
-              <p>If you don't recognize this activity, please secure your account immediately:</p>
-              <center>
-                <a href="${process.env.FRONTEND_URL}/change-password" class="button">Change Password Now</a>
-              </center>
-            </div>
-            <div class="footer">
-              <p>© 2024 Secure Auth System. All rights reserved.</p>
+              <div class="content">
+                <p class="greeting">Hello ${name},</p>
+                <p class="message">We detected a login attempt from a new device or location. Here are the details:</p>
+                
+                <div class="details-box">
+                  <div class="detail-row">
+                    <span class="detail-label">📍 Location:</span>
+                    <span class="detail-value">${location.city}, ${location.country}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">🌐 IP Address:</span>
+                    <span class="detail-value">${ipAddress}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">💻 Device:</span>
+                    <span class="detail-value">${device.browser} on ${device.os}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">⏰ Time:</span>
+                    <span class="detail-value">${formattedTime}</span>
+                  </div>
+                </div>
+                
+                <div class="safe-message">
+                  ✅ <strong>If this was you:</strong> You can safely ignore this email. Your account is secure.
+                </div>
+                
+                <div class="action-box">
+                  <p class="action-title">⚡ Didn't recognize this login?</p>
+                  <p style="color: #991b1b; margin-bottom: 15px; font-size: 14px;">If you don't recognize this activity, immediately secure your account by changing your password.</p>
+                  <div class="button-container">
+                    <a href="${process.env.FRONTEND_URL}/security-center" class="button">Go to Security Center</a>
+                  </div>
+                </div>
+                
+                <p class="message">For your security, we recommend:</p>
+                <ul style="color: #475569; margin: 15px 0 15px 25px; font-size: 14px;">
+                  <li style="margin: 8px 0;">Review all active sessions in your Security Center</li>
+                  <li style="margin: 8px 0;">Enable two-factor authentication if not already active</li>
+                  <li style="margin: 8px 0;">Use a unique, strong password with special characters</li>
+                </ul>
+              </div>
+              <div class="footer">
+                <p>© 2024 <span class="footer-brand">AuthNova</span>. Security-first authentication platform.</p>
+                <p style="margin-top: 10px; color: #94a3b8;">This is an automated message, please don't reply to this email.</p>
+              </div>
             </div>
           </div>
         </body>
